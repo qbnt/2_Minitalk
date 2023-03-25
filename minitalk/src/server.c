@@ -6,23 +6,23 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:26 by qbanet            #+#    #+#             */
-/*   Updated: 2023/03/23 11:07:57 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/03/25 14:30:28 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int	ft_input()
+int	ft_input(void)
 {
-	
+	return (1);
 }
 
-int	ft_confirm()
+int	ft_confirm(void)
 {
-	
+	return (1);
 }
 
-int	main(int argc, char **argv)
+int	main(void)
 {
 	pid_t pid;
 

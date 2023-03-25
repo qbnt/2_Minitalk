@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 18:37:51 by qbanet            #+#    #+#             */
-/*   Updated: 2023/03/23 18:39:18 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/03/25 14:35:40 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ char	*ft_convert_base(t_ll num, const char *base_set, int base)
 
 	if (num < 0)
 	{
-		tmp = ft_convert_base_unsigned(-num, base_set, base);
+		tmp = ft_convert_base_unsign(-num, base_set, base);
 		result = ft_strjoin("-", tmp);
 		free(tmp);
 		return (result);
 	}
 	else
-		return (ft_convert_base_unsigned(num, base_set, base));
+		return (ft_convert_base_unsign(num, base_set, base));
 }

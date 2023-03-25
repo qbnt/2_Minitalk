@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:51:00 by qbanet            #+#    #+#             */
-/*   Updated: 2023/03/25 11:03:56 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/03/25 14:33:08 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ char		*ft_itoa(int n);
 char		*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char*));
 char		*ft_convert_base(t_ll num, const char *base_set, int base);
-
+char		*ft_convert_base_unsign(t_ull num, const char *base_set, int base);
 
 /*********** FT_PUT ***********/
 
