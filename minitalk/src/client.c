@@ -6,17 +6,11 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:22 by qbanet            #+#    #+#             */
-/*   Updated: 2023/03/25 14:17:04 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/03/26 15:14:23 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
-
-void	ft_send_msg(int pid, char *str_to_send)
-{
-	ft_printf("%d", pid);
-	ft_printf("%s", str_to_send);
-}
 
 int	main(int argc, char **argv)
 {
@@ -25,11 +19,11 @@ int	main(int argc, char **argv)
 
 	if (argc != 3)
 	{
-		ft_printf("Error, wrongs numburs of arguments");
+		ft_printf("Error, wrongs numburs of arguments.\n");
+		return (1);
 	}
-
 	pid = ft_atoi(argv[1]);
 	str_to_send = argv[2];
-	ft_send_msg(pid, str_to_send);
+	ft_printf("pid : %d, str_to_send : %s \n", pid, str_to_send);
 	return (0);
 }
