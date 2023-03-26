@@ -6,87 +6,61 @@
 #    By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/22 18:34:28 by qbanet            #+#    #+#              #
-#    Updated: 2023/03/25 14:59:26 by qbanet           ###   ########.fr        #
+#    Updated: 2023/03/26 17:16:35 by qbanet           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME_CLIENT = client
 NAME_SERVER = server
 
-SRCDIR = src
-INCDIR = includes
-LIBDIR = libft
-OBJDIR = obj
-
-SRC_CLIENT = $(SRCDIR)/client.c $(SRCDIR)/utile.c
-SRC_SERVER = $(SRCDIR)/server.c $(SRCDIR)/utile.c
-
-OBJDIR_CLIENT = $(OBJDIR)/client
-OBJDIR_SERVER = $(OBJDIR)/server
-OBJDIR_LIBFT = $(OBJDIR)/libft
-
-OBJ_CLIENT = $(addprefix $(OBJDIR_CLIENT)/,$(notdir $(SRC_CLIENT:.c=.o)))
-OBJ_SERVER = $(addprefix $(OBJDIR_SERVER)/,$(notdir $(SRC_SERVER:.c=.o)))
-LIB_OBJ = $(addprefix $(OBJDIR_LIBFT)/,$(notdir $(LIB_SRC:.c=.o)))
-
-LIB_MAKEFILE = $(LIBDIR)/Makefile
-LIB_INC = $(LIBDIR)/includes/libft.h
-LIB_SRC = $(wildcard $(LIBDIR)/src/*.c)
-
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-CPPFLAGS = -I$(INCDIR) -I$(LIBDIR)/includes
-LDFLAGS = -L$(LIBDIR) -lft
 
-# Define colors
-BLUE	= \033[0;34m
-RED		= \033[0;31m
-GREEN	= \033[0;32m
-YELLOW	= \033[0;33m
-RESET	= \033[0m
+SRCS_CLIENT = src/client.c src/utile.c
+SRCS_SERVER = src/server.c src/utile.c
 
-all: $(NAME_CLIENT) $(NAME_SERVER)
+LIBFT = libft/libft.a
+LIBFT_DIR = libft
+LIBFT_FLAGS = -L$(LIBFT_DIR) -lft
 
-$(NAME_CLIENT): $(OBJ_CLIENT) $(LIB_OBJ) $(LIB_MAKEFILE)
-	@$(MAKE) -C $(LIBDIR)
-	@echo "$(GREEN)Compiling $@...$(RESET)"
-	@$(CC) $(LDFLAGS) $^ -o $@
-	@echo "$(YELLOW)$@ has been successfully compiled!$(RESET)"
+INCLUDES = -Iincludes -I$(LIBFT_DIR)/includes
 
-$(NAME_SERVER): $(OBJ_SERVER) $(LIB_OBJ) $(LIB_MAKEFILE)
-	@$(MAKE) -C $(LIBDIR)
-	@echo "$(GREEN)Compiling $@...$(RESET)"
-	@$(CC) $(LDFLAGS) $^ -o $@
-	@echo "$(YELLOW)$@ has been successfully compiled!$(RESET)"
+OBJS_DIR = objs
+OBJS_CLIENT = $(SRCS_CLIENT:%.c=$(OBJS_DIR)/%.o)
+OBJS_SERVER = $(SRCS_SERVER:%.c=$(OBJS_DIR)/%.o)
 
-$(OBJDIR_CLIENT)/%.o: $(SRCDIR)/%.c $(INCDIR)/minitalk.h | $(OBJDIR_CLIENT)
-	@echo "$(BLUE)Compiling $<...$(RESET)"
-	@$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+GREEN = \033[0;32m
+YELLOW = \033[0;33m
+RESET = \033[0m
 
-$(OBJDIR_SERVER)/%.o: $(SRCDIR)/%.c $(INCDIR)/minitalk.h | $(OBJDIR_SERVER)
-	@echo "$(BLUE)Compiling $<...$(RESET)"
-	@$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+all: $(LIBFT) $(NAME_CLIENT) $(NAME_SERVER)
 
-$(OBJDIR_LIBFT)/%.o: $(LIBDIR)/src/%.c $(LIB_INC) $(LIB_MAKEFILE) | $(OBJDIR_LIBFT)
-	@$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+$(NAME_CLIENT): $(OBJS_CLIENT)
+	@echo "$(YELLOW)Linking client...$(RESET)"
+	$(CC) $(CFLAGS) $(OBJS_CLIENT) $(LIBFT_FLAGS) -o $(NAME_CLIENT)
+	@echo "$(GREEN)Client created!$(RESET)"
 
-$(OBJDIR_CLIENT):
-	@mkdir -p $@
+$(NAME_SERVER): $(OBJS_SERVER)
+	@echo "$(YELLOW)Linking server...$(RESET)"
+	$(CC) $(CFLAGS) $(OBJS_SERVER) $(LIBFT_FLAGS) -o $(NAME_SERVER)
+	@echo "$(GREEN)Server created!$(RESET)"
 
-$(OBJDIR_SERVER):
-	@mkdir -p $@
+$(OBJS_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OBJDIR_LIBFT):
-	@mkdir -p $@
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-	@$(MAKE) -C $(LIBDIR) clean
-	@$(RM) -r $(OBJDIR)
+	$(MAKE) -C $(LIBFT_DIR) clean
+	rm -rf $(OBJS_DIR)
+	@echo "$(GREEN)Object files cleaned!$(RESET)"
 
 fclean: clean
-	@$(MAKE) -C $(LIBDIR) fclean
-	@$(RM) $(NAME_CLIENT) $(NAME_SERVER)
-	@echo "$(YELLOW)$(NAME_CLIENT) and $(NAME_SERVER) have been removed!$(RESET)"
+	$(MAKE) -C $(LIBFT_DIR) fclean
+	rm -f $(NAME_CLIENT) $(NAME_SERVER)
+	@echo "$(GREEN)Client and Server executables cleaned!$(RESET)"
 
 re: fclean all
 
