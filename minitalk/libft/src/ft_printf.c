@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/19 21:34:52 by qbanet            #+#    #+#             */
-/*   Updated: 2023/03/23 12:45:37 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/03/27 13:16:36 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,20 @@ int	ft_printchar(char c)
 	return (1);
 }
 
-int	ft_format(va_list args, const char format)
+int	ft_format(va_list *args, const char format)
 {
 	if (format == 'c')
-		return (ft_printchar(va_arg(args, int)));
+		return (ft_printchar(va_arg(*args, int)));
 	else if (format == 's')
-		return (ft_printstr(va_arg(args, char *)));
+		return (ft_printstr(va_arg(*args, char *)));
 	else if (format == 'p')
-		return (ft_printadr(va_arg(args, unsigned long long)));
+		return (ft_printadr(va_arg(*args, unsigned long long)));
 	else if (format == 'd' || format == 'i')
-		return (ft_printnbr(va_arg(args, int)));
+		return (ft_printnbr(va_arg(*args, int)));
 	else if (format == 'u')
-		return (ft_printunsigned(va_arg(args, unsigned int)));
+		return (ft_printunsigned(va_arg(*args, unsigned int)));
 	else if (format == 'x' || format == 'X')
-		return (ft_printhexa(va_arg(args, int), format));
+		return (ft_printhexa(va_arg(*args, int), format));
 	else if (format == '%')
 		return (ft_printpourcent());
 	else
@@ -61,7 +61,7 @@ int	ft_printf(const char *str, ...)
 	while (str[i])
 	{
 		if (str[i] == '%' && str[i + 1])
-			len += ft_format(args, str[++i]);
+			len += ft_format(&args, str[++i]);
 		else
 		{
 			ft_printchar(str[i]);
