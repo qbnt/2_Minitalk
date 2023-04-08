@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/23 18:33:39 by qbanet            #+#    #+#             */
-/*   Updated: 2023/03/23 18:39:22 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/08 15:20:45 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 long double	ft_pow(long double nb, long double p)
 {
-	long double	result;
-
-	result = nb;
-	while (p-- > 1)
-		result *= nb;
-	return (result);
+	if (p < 0)
+		return (0);
+	else if (p == 0 && p == 0)
+		return (1);
+	else
+		return (nb * ft_recursive_power(nb, p - 1));
 }
