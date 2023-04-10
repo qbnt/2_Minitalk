@@ -6,11 +6,20 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:22 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/08 15:25:12 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/10 10:37:03 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+static void	ft_error(int argc)
+{
+	if (argc != 3)
+	{
+		ft_printf("Wrong number of arguments !\n");
+		return ;
+	}
+}
 
 static void	ft_received(int sig)
 {
@@ -25,7 +34,7 @@ static void	ft_received(int sig)
 	}
 }
 
-static void	ft_tx(int pid, char *str)
+static void	ft_tx(int s_pid, char *str)
 {
 	int		i;
 	char	c;
@@ -37,33 +46,29 @@ static void	ft_tx(int pid, char *str)
 		while (i --)
 		{
 			if (c >> i & 1)
-				kill(pid, SIGUSR2);
+				kill(s_pid, SIGUSR2);
 			else
-				kill(pid, SIGUSR1);
-			usleep(200);
+				kill(s_pid, SIGUSR1);
+			usleep(50);
 		}
 	}
 	i = 8;
 	while (i --)
 	{
-		kill(pid, SIGUSR1);
-		usleep(100);
+		kill(s_pid, SIGUSR1);
+		usleep(50);
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	int		pid;
+	int		s_pid;
 
-	if (argc != 3)
-	{
-		ft_printf("Wrong number of arguments !\n");
-		return (-1);
-	}
-	pid = ft_atoi(argv[1]);
+	s_pid = ft_atoi(argv[1]);
+	ft_error(argc);
 	signal(SIGUSR1, ft_received);
 	signal(SIGUSR2, ft_received);
-	ft_tx(pid, argv[2]);
+	ft_tx(s_pid, argv[2]);
 	while (1)
 		pause();
 	return (0);

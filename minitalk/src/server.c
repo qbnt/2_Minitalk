@@ -6,21 +6,31 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:26 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/08 15:26:06 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/10 10:36:49 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	ft_pidprint(void)
+static void	ft_display_banner(int pid)
 {
-	pid_t	pid;
-
-	pid = getpid();
-	ft_printf("Welcome to your Minitalk server.\nYour PID is : %d\n", pid);
+	ft_printf("\n\t%s███╗   ███╗██╗███╗   ██╗██╗████████╗ █████╗ ██╗     ██╗██╗\
+			%s\n", C_GRE, C_NOR);
+	ft_printf("\t%s██╔████╔██║██║██╔██╗ ██║██║   ██║   ███████║██║     █████╔╝\
+			%s \n", C_GRE, C_NOR);
+	ft_printf("\t%s██║╚██╔╝██║██║██║╚██╗██║██║   ██║   ██╔══██║██║     ██╔═██╗\
+			%s \n", C_GRE, C_NOR);
+	ft_printf("\t%s██║ ╚═╝ ██║██║██║ ╚████║██║   ██║   ██║  ██║███████╗██║  ██╗\
+			%s\n", C_GRE, C_NOR);
+	ft_printf("\t%s╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝\
+			%s\n", C_GRE, C_NOR);
+	ft_printf("%s\n\t\tPID: %d%s\t\t\t%sBy: qbanet%s\n", C_RED, pid, C_NOR,
+		C_GRE, C_NOR);
+	ft_printf("\t⊱ ────────────────────── {.⋅ ✯ ⋅.} ─────────────────────── ⊰\
+			\n\n");
 }
 
-void	ft_rx(int sig, siginfo_t *info, void *context)
+static  void	ft_rx(int sig, siginfo_t *info, void *context)
 {
 	static int				i = 0;
 	static pid_t			c_pid = 0;
@@ -50,8 +60,10 @@ void	ft_rx(int sig, siginfo_t *info, void *context)
 int	main(void)
 {
 	struct sigaction	s_act;
+	int					s_pid;
 
-	ft_pidprint();
+	s_pid = getpid();
+	ft_display_banner(s_pid);
 	s_act.sa_flags = SA_SIGINFO;
 	s_act.sa_sigaction = ft_rx;
 	sigaction(SIGUSR1, &s_act, NULL);
