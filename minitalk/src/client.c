@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:22 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/10 10:37:03 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/10 12:02:46 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ static void	ft_tx(int s_pid, char *str)
 {
 	int		i;
 	char	c;
+	char	n;
 
+	n = '\n';
 	while (*str)
 	{
 		i = 8;
@@ -49,8 +51,17 @@ static void	ft_tx(int s_pid, char *str)
 				kill(s_pid, SIGUSR2);
 			else
 				kill(s_pid, SIGUSR1);
-			usleep(50);
+			usleep(1500);
 		}
+	}
+	i = 8;
+	while (i --)
+	{
+		if (n >> i & 1)
+			kill(s_pid, SIGUSR2);
+		else
+			kill(s_pid, SIGUSR1);
+		usleep(50);
 	}
 	i = 8;
 	while (i --)
