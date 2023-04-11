@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:26 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/10 10:36:49 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/11 17:24:26 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,45 +30,47 @@ static void	ft_display_banner(int pid)
 			\n\n");
 }
 
-static  void	ft_rx(int sig, siginfo_t *info, void *context)
+void	ft_receved_strlen(int current_bit, char **str, int *receved, int s)
 {
-	static int				i = 0;
-	static pid_t			c_pid = 0;
-	static unsigned char	c = 0;
+	static int	len_val = 0;
 
-	(void) context;
-	if (!c_pid)
-		c_pid = info->si_pid;
-	c |= (sig == SIGUSR2);
-	if (++i == 8)
+	if (s == SIGUSR2)
+		len_val += ft_pow(2, *curr_bit);
+	if (*curr_bit == 31)
 	{
-		i = 0;
-		if (!c)
-		{
-			kill(c_pid, SIGUSR2);
-			c_pid = 0;
-			return ;
-		}
-		ft_putchar_fd(c, 1);
-		c = 0;
-		kill(c_pid, SIGUSR1);
+		*received = 1;
+		*str = ft_calloc(len_val + 1, sizeof(char));
+		*curr_bit = 0;
+		len_val = 0;
+		return ;
 	}
+	(*curr_bit)++;
+}
+
+static void	ft_rx(int sig, siginfo_t *info, void *context)
+{
+	static int	receved_len = 0;
+	static int	char_value = 0;
+	static int	current_bite = 0;
+	static int	i = 0;
+	static char	*final_str;
+
+	if (!receved_len)
+		ft_receved_strlen(&current_bit, &final_str, &len_received, signal);
 	else
-		c <<= 1;
+	
 }
 
 int	main(void)
 {
 	struct sigaction	s_act;
-	int					s_pid;
 
-	s_pid = getpid();
-	ft_display_banner(s_pid);
+	ft_display_banner(getpid());
 	s_act.sa_flags = SA_SIGINFO;
 	s_act.sa_sigaction = ft_rx;
 	sigaction(SIGUSR1, &s_act, NULL);
 	sigaction(SIGUSR2, &s_act, NULL);
 	while (1)
-		pause();
+		usleep(WAIT_TIME);
 	return (0);
 }
