@@ -6,59 +6,74 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:22 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/11 17:13:09 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/12 09:36:42 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-int	g_pending = 1;
-
-static void	ft_received(int sig, siginfo_t *info, void *context)
+static int	ft_error_in_args(int argc, char **argv)
 {
-	(void) context;
-	(void) info->si_pid;
-	if (sig == SIGUSR1)
-		g_pending = 0;
+	int	i;
+
+	if (argc != 3)
+		return (-1);
+	i = -1;
+	while (argv[1][++i])
+	{
+		if (ft_strchr("1234567890", argv[1][i]))
+			return (1);
+	}
+	return (0);
 }
 
-static void	ft_tx(int s_pid, char *str)
+static void	ft_send_next_char(unsigned char c, int s_pid)
 {
-	int		i;
-	char	c;
+	int	i;
 
-	while (*str)
+	i = -1;
+	while (++i < 8)
 	{
-		i = 8;
-		c = *str++;
-		while (i --)
-		{
-			if (c >> i & 1)
-				kill(s_pid, SIGUSR2);
-			else
-				kill(s_pid, SIGUSR1);
-			while (g_pending)
-				usleep(WAIT_TIME);
-		}
+		if (c & 0x01)
+			kill(s_pid, SIGUSR2);
+		else
+			kill(s_pid, SIGUSR1);
+		c = c >> 1;
+		usleep(WAIT_TIME);
+	}
+}
+
+static void	ft_send_len(int len, int s_pid)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 32)
+	{
+		if (len & 0x01)
+			kill(s_pid, SIGUSR2);
+		else
+			kill(s_pid, SIGUSR1);
+		len = len >> 1;
+		usleep(WAIT_TIME);
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	struct sigaction	c_act;
-	int					s_pid;
+	int		s_pid;
+	char	*str_to_send;
+	int		len;
+	int		i;
 
-	c_act.sa_flags = SA_SIGINFO;
-	c_act.sa_sigaction = ft_received;
-	s_pid = ft_atoi(argv[1]);
-	if (argc != 3)
-	{
-		ft_printf("Wrong number of arguments !\n");
+	if(ft_error_in_args(argc, argv))
 		return (-1);
-	}
-	sigaction(SIGUSR1, &c_act, NULL);
-	ft_tx(s_pid, argv[2]);
-	while (1)
-		pause();
-	return (0);
+	s_pid = ft_atoi(argv[1]);
+	str_to_send = argv[2];
+	len = ft_strlen(str_to_send);
+	i = -1;
+	ft_send_len(len, s_pid);
+	while(str_to_send[++i])
+		ft_send_next_char(str_to_send[i], s_pid);
+	ft_send_next_char(str_to_send[i], s_pid);
 }
