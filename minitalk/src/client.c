@@ -6,11 +6,21 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:22 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/12 12:00:19 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/12 17:12:30 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+int	g_pending = 1;
+
+static void	ft_receved(int sig)
+{
+	if (sig == SIGUSR1)
+		g_pending = 0;
+	else
+		ft_printf("Receved Message !\n");
+}
 
 static int	ft_error_in_args(int argc, char **argv)
 {
@@ -42,7 +52,8 @@ static void	ft_send_len(int len, int s_pid)
 		else
 			kill(s_pid, SIGUSR1);
 		len = len >> 1;
-		usleep(WAIT_TIME);
+		while (g_pending)
+			usleep(WAIT_TIME);
 	}
 }
 
@@ -58,7 +69,8 @@ static void	ft_send_next_char(unsigned char c, int s_pid)
 		else
 			kill(s_pid, SIGUSR1);
 		c = c >> 1;
-		usleep(WAIT_TIME);
+		while (g_pending)
+			usleep(WAIT_TIME);
 	}
 }
 
@@ -75,6 +87,7 @@ int	main(int argc, char **argv)
 	str_to_send = argv[2];
 	len = ft_strlen(str_to_send);
 	i = -1;
+	signal(SIGUSR1, ft_receved);
 	ft_send_len(len, s_pid);
 	while (str_to_send[++i])
 		ft_send_next_char(str_to_send[i], s_pid);
