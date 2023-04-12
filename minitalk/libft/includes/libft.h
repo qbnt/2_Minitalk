@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:51:00 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/11 17:12:36 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/12 10:12:30 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,6 @@ char		*get_next_line(int fd);
 /*********** MATH ***********/
 
 int			ft_max(int a, int b);
-long double	ft_pow(long double nb, long double p);
+long long	ft_pow(long long nb, long long p);
 
 #endif
