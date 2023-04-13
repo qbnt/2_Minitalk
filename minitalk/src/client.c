@@ -6,21 +6,13 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:22 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/12 17:12:30 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/13 11:25:07 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
 int	g_pending = 1;
-
-static void	ft_receved(int sig)
-{
-	if (sig == SIGUSR1)
-		g_pending = 0;
-	else
-		ft_printf("Receved Message !\n");
-}
 
 static int	ft_error_in_args(int argc, char **argv)
 {
@@ -40,6 +32,14 @@ static int	ft_error_in_args(int argc, char **argv)
 	return (0);
 }
 
+static void	ft_receved(int sig)
+{
+	if (sig == SIGUSR1)
+		g_pending = 0;
+	else
+		ft_printf("Receved Message !\n");
+}
+
 static void	ft_send_len(int len, int s_pid)
 {
 	int	i;
@@ -47,6 +47,7 @@ static void	ft_send_len(int len, int s_pid)
 	i = -1;
 	while (++i < 32)
 	{
+		g_pending = 1;
 		if (len & 0x01)
 			kill(s_pid, SIGUSR2);
 		else
@@ -88,8 +89,11 @@ int	main(int argc, char **argv)
 	len = ft_strlen(str_to_send);
 	i = -1;
 	signal(SIGUSR1, ft_receved);
+	signal(SIGUSR2, ft_receved);
 	ft_send_len(len, s_pid);
 	while (str_to_send[++i])
 		ft_send_next_char(str_to_send[i], s_pid);
 	ft_send_next_char(str_to_send[i], s_pid);
+	while (1)
+		usleep(WAIT_TIME);
 }
