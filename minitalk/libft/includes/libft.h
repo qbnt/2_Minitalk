@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 11:51:00 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/12 10:12:30 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/13 15:53:10 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,15 @@ typedef long				t_l;
 # define C_NOR "\x1b[m"
 
 # define C_GRA "\x1b[30m"
-# define C_RED "\x1b[31m"
-# define C_GRE "\x1b[32m"
-# define C_YEL "\x1b[33m"
+# define C_RED "\x1b[38;5;196m"
+# define C_RED_BOLD "\x1b[1m\x1b[38;5;196m"
+# define C_GRE "\x1b[38;5;151m"
 # define C_BLU "\x1b[34m"
 # define C_MAG "\x1b[35m"
 # define C_CYA "\x1b[36m"
 # define C_WHI "\x1b[37m"
+# define C_YEL "\x1b[38;5;222m"
+# define C_PIN "\x1b[38;5;207m"
 
 # define B_GRA "\x1b[40m"
 # define B_RED "\x1b[41m"
