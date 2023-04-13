@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:22 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/13 11:25:07 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/13 13:12:23 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ static void	ft_receved(int sig)
 	if (sig == SIGUSR1)
 		g_pending = 0;
 	else
+	{
 		ft_printf("Receved Message !\n");
+		exit(EXIT_SUCCESS);
+	}
 }
 
 static void	ft_send_len(int len, int s_pid)
@@ -65,13 +68,16 @@ static void	ft_send_next_char(unsigned char c, int s_pid)
 	i = -1;
 	while (++i < 8)
 	{
+		g_pending = 1;
 		if (c & 0x01)
 			kill(s_pid, SIGUSR2);
 		else
 			kill(s_pid, SIGUSR1);
 		c = c >> 1;
 		while (g_pending)
+		{
 			usleep(WAIT_TIME);
+		}
 	}
 }
 
