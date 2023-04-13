@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:26 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/13 14:31:15 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/13 14:42:11 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,34 +48,32 @@ static void	ft_receved_strlen(int s, pid_t c_pid)
 
 static void	ft_charset(char *str, siginfo_t *info)
 {
-	if (g_yes.current_bit == 7)
+	str[g_yes.i++] = g_yes.char_value;
+	g_yes.current_bit = 0;
+	if (g_yes.char_value == 0)
 	{
-		str[g_yes.i++] = g_yes.char_value;
-		g_yes.current_bit = 0;
-		if (g_yes.char_value == 0)
-		{
-			kill(info->si_pid, SIGUSR2);
-			return (ft_rest_var());
-		}
-		g_yes.char_value = 0;
-		kill((*info).si_pid, SIGUSR1);
-		return ;
+		kill(info->si_pid, SIGUSR2);
+		return (ft_rest_var());
 	}
+	g_yes.char_value = 0;
+	kill((*info).si_pid, SIGUSR1);
+	return ;
 }
 
 static void	ft_rx(int sig, siginfo_t *info, void *idc)
 {
 	char	*str;
 
-	str = g_yes.final_str;
 	(void) idc;
+	str = g_yes.final_str;
 	if (!g_yes.receved_len)
 		ft_receved_strlen(sig, info->si_pid);
 	else
 	{
 		if (sig == SIGUSR2)
 			g_yes.char_value += (int)ft_pow(2, g_yes.current_bit);
-		ft_charset(str, info);
+		if (g_yes.current_bit == 7)
+			return (ft_charset(str, info));
 		g_yes.current_bit++;
 	}
 	kill(info->si_pid, SIGUSR1);
