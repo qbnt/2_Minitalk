@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 14:30:22 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/13 15:19:40 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/14 10:05:44 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,10 @@ static int	ft_error_in_args(int argc, char **argv)
 	return (0);
 }
 
-static void	ft_receved(int sig)
+static void	ft_receved(int sig, siginfo_t *info, void *nfc)
 {
+	(void) nfc;
+	(void) info;
 	if (sig == SIGUSR1)
 		g_pending = 0;
 	else
@@ -83,19 +85,22 @@ static void	ft_send_next_char(unsigned char c, int s_pid)
 
 int	main(int argc, char **argv)
 {
-	int		s_pid;
-	char	*str_to_send;
-	int		len;
-	int		i;
+	int					s_pid;
+	char				*str_to_send;
+	int					len;
+	int					i;
+	struct sigaction	c_act;
 
+	c_act.sa_flags = SA_SIGINFO;
+	c_act.sa_sigaction = ft_receved;
 	if (ft_error_in_args(argc, argv))
 		return (-1);
 	s_pid = ft_atoi(argv[1]);
 	str_to_send = argv[2];
 	len = ft_strlen(str_to_send);
 	i = -1;
-	signal(SIGUSR1, ft_receved);
-	signal(SIGUSR2, ft_receved);
+	sigaction(SIGUSR1, &c_act, NULL);
+	sigaction(SIGUSR2, &c_act, NULL);
 	ft_send_len(len, s_pid);
 	while (str_to_send[++i])
 		ft_send_next_char(str_to_send[i], s_pid);
