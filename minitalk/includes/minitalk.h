@@ -6,7 +6,7 @@
 /*   By: qbanet <qbanet@student.42perpignan.fr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 18:02:47 by qbanet            #+#    #+#             */
-/*   Updated: 2023/04/13 16:19:38 by qbanet           ###   ########.fr       */
+/*   Updated: 2023/04/17 10:05:43 by qbanet           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "libft.h"
 
-# define WAIT_TIME 10
+# define WAIT_TIME 1
 
 typedef struct s_char_c
 {
